@@ -82,7 +82,7 @@ if __name__ == '__main__':
     e = TfPoseEstimator(get_graph_path(args.model), target_size=(w, h))
     camera = cv2.VideoCapture(args.camera)
     ret_val, image = camera.read()
-    
+
     print("**** CTRL+C to exit ****")
     while True:
         # get image form the camera
@@ -107,23 +107,64 @@ if __name__ == '__main__':
             # TODO ensure it only does this when someone is hailing a taxi.
             # That is, an arm is above their head.
 
-            nose = -1
-            left = 1
-            right = 1
-            
+            #Initialise variables
+            left_eye = 0
+            right_eye = 0
+            left_wrist = 0
+            right_wrist = 0
+            right_elbow = 0
+            left_elbow = 0
+
+            main_height = 0
+
             for k,v in human.body_parts.items():
                 if POSE_COCO_BODY_PARTS[k].lower() == "nose":
                     nose = v.y
                     #print("nose",nose)
-                elif POSE_COCO_BODY_PARTS[k].lower() == "rwrist" or POSE_COCO_BODY_PARTS[k].lower() == "relbow":
-                    right = v.y
+                elif POSE_COCO_BODY_PARTS[k].lower() == "rwrist":
+                    right_wrist = v.y
                     #print("right",right)
-                elif POSE_COCO_BODY_PARTS[k].lower() == "lwrist" or POSE_COCO_BODY_PARTS[k].lower() == "lelbow":
-                    left = v.y
+                elif POSE_COCO_BODY_PARTS[k].lower() == "lwrist":
+                    left_wrist = v.y
                     #print("left",left)
-            
-            if left < nose or right < nose:
+                elif POSE_COCO_BODY_PARTS[k].lower() == "relbow":
+                    right_elbow = v.y
+                elif POSE_COCO_BODY_PARTS[k].lower() == "lelbow":
+                    left_elbow = v.y
+                elif POSE_COCO_BODY_PARTS[k].lower() == "reye":
+                    right_eye = v.y
+                elif POSE_COCO_BODY_PARTS[k].lower() == "leye":
+                    left_eye = v.y
+
+
+            #Pick the one with greater height/y
+            if left_eye > right_eye:
+                main_height = left_eye
+            elif right_eye > left_eye:
+                main_height = right_eye
+            else:
+                main_height = left_eye
+
+
+            #Conditions to hail_taxi
+
+            #Case to check if both arms up
+            if right_elbow > main_height and left_elbow > main_height:
+
+                if (right_wrist > main_height and right_wrist > right_elbow) and
+                (left_wrist > main_height and left_wrist > left_elbow):
+                    hail_taxi(image)
+
+            #Cases below are to check if either one arm/wrist is up
+            elif right_elbow > main_height and left_elbow > main_height:
+
+                if (right_wrist > main_height and right_wrist > right_elbow) or
+                (left_wrist > main_height and left_wrist > left_elbow):
                 hail_taxi(image)
+
+            elif right_elbow < main_height or left_elbow < main_height:
+                if(left_wrist > main_height) or (right_wrist > main_height):
+                    hail_taxi(image)
 
             # Debugging statement: remove before demonstration.
             #print([(POSE_COCO_BODY_PARTS[k], v.x, v.y) for k,v in human.body_parts.items()])
