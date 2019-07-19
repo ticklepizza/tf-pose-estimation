@@ -130,18 +130,18 @@ if __name__ == '__main__':
                 elif POSE_COCO_BODY_PARTS[k].lower() == "lelbow":
                     left_elbow = v.y
                 elif POSE_COCO_BODY_PARTS[k].lower() == "rshoulder":
-                    right_eye = v.y
+                    right_shoulder = v.y
                 elif POSE_COCO_BODY_PARTS[k].lower() == "lshoulder":
-                    left_eye = v.y
+                    left_shoulder = v.y
 
 
             #Pick the one with greater height/y
-            if left_eye > right_eye:
-                main_height = left_eye
-            elif right_shoulder > left_eye:
-                main_height = right_eye
+            if left_shoulder > right_shoulder:
+                main_height = left_shoulder
+            elif right_shoulder > left_shoulder:
+                main_height = right_shoulder
             else:
-                main_height = left_eye
+                main_height = left_shoulder
 
 
             #Conditions to hail_taxi
