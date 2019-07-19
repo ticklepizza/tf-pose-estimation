@@ -108,10 +108,6 @@ if __name__ == '__main__':
             # That is, an arm is above their head.
 
             #Initialise variables
-            left_eye = 0
-            right_eye = 0
-            left_wrist = 0
-            right_wrist = 0
             right_elbow = 0
             left_elbow = 0
             left_shoulder = 0
