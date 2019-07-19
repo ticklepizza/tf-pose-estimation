@@ -114,6 +114,8 @@ if __name__ == '__main__':
             right_wrist = 0
             right_elbow = 0
             left_elbow = 0
+            left_shoulder = 0
+            right_shoulder = 0
 
             main_height = 0
 
@@ -131,16 +133,16 @@ if __name__ == '__main__':
                     right_elbow = v.y
                 elif POSE_COCO_BODY_PARTS[k].lower() == "lelbow":
                     left_elbow = v.y
-                elif POSE_COCO_BODY_PARTS[k].lower() == "reye":
+                elif POSE_COCO_BODY_PARTS[k].lower() == "rshoulder":
                     right_eye = v.y
-                elif POSE_COCO_BODY_PARTS[k].lower() == "leye":
+                elif POSE_COCO_BODY_PARTS[k].lower() == "lshoulder":
                     left_eye = v.y
 
 
             #Pick the one with greater height/y
-            if left_eye < right_eye:
+            if left_eye > right_eye:
                 main_height = left_eye
-            elif right_eye < left_eye:
+            elif right_shoulder > left_eye:
                 main_height = right_eye
             else:
                 main_height = left_eye
@@ -149,20 +151,14 @@ if __name__ == '__main__':
             #Conditions to hail_taxi
 
             #Case to check if both arms up
-            if right_elbow < main_height and left_elbow < main_height:
-
-                if (right_wrist < main_height and right_wrist < right_elbow) and (left_wrist > main_height and left_wrist > left_elbow):
-                    hail_taxi(image)
+            if (right_elbow < main_height) and (left_elbow < main_height):
+                print("both arms up - wrist > main")
+                hail_taxi(image)
 
             #Cases below are to check if either one arm/wrist is up
-            elif right_elbow < main_height or left_elbow < main_height:
-
-                if (right_wrist < main_height and right_wrist < right_elbow) or (left_wrist < main_height and left_wrist < left_elbow):
-                    hail_taxi(image)
-
-            elif right_elbow > main_height or left_elbow > main_height:
-                if(left_wrist < main_height) or (right_wrist < main_height):
-                    hail_taxi(image)
+            if (right_elbow < main_height) or (left_elbow < main_height):
+                print("either wrist > main")
+                hail_taxi(image)
 
             # Debugging statement: remove before demonstration.
             #print([(POSE_COCO_BODY_PARTS[k], v.x, v.y) for k,v in human.body_parts.items()])
