@@ -151,7 +151,7 @@ if __name__ == '__main__':
                 print("both arms up - wrist > main")
                 hail_taxi(image)
 
-            #Cases below are to check if either one arm/wrist is up
+            #Cases below are to check if either elbow is up
             if (right_elbow < main_height) or (left_elbow < main_height):
                 print("either wrist > main")
                 hail_taxi(image)
